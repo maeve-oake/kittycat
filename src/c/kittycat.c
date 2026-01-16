@@ -3,8 +3,8 @@
 static Window* s_main_window;
 static TextLayer* s_time_layer;
 static GFont s_time_font;
-static BitmapLayer *s_kitty_layer;
-static GBitmap *s_kitty_bitmap;
+static BitmapLayer* s_kitty_layer;
+static GBitmap* s_kitty_bitmap;
 
 static void update_time() {
   // get a tm (time) structure
@@ -37,7 +37,7 @@ static void main_window_load(Window* window) {
   // set the kitty onto the layer, then add to window
   bitmap_layer_set_bitmap(s_kitty_layer, s_kitty_bitmap);
   layer_add_child(window_layer, bitmap_layer_get_layer(s_kitty_layer));
-  bitmap_layer_set_
+  bitmap_layer_set_alignment(s_kitty_layer, GAlignBottom);
 
   // create gfont
   s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_PERFECT_DOS_48));
