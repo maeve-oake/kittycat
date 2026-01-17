@@ -5,6 +5,8 @@ static TextLayer* s_time_layer;
 static GFont s_time_font;
 static BitmapLayer* s_kitty_layer;
 static GBitmap* s_kitty_bitmap;
+static int s_battery_level;
+static TextLayer* s_battery_layer;
 
 static void update_time() {
   // get a tm (time) structure
@@ -21,6 +23,15 @@ static void update_time() {
 
 static void tick_handler(struct tm* tick_time, TimeUnits units_changed) {
   update_time();
+}
+
+static void battery_callback(BatteryChargeState state) {
+  s_battery_level = state.charge_percent;
+
+  static char s_buffer[8];
+  snprintf(s_buffer, sizeof(s_buffer), "%d%%", s_battery_level);
+
+  text_layer_set_text(s_battery_layer, s_buffer);
 }
 
 static void main_window_load(Window* window) {
@@ -42,18 +53,20 @@ static void main_window_load(Window* window) {
   // create gfont
   s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_PERFECT_DOS_48));
 
-  // create textlayer
-  s_time_layer = text_layer_create(
-    GRect(0, 0, bounds.size.w, 50)
-  );
-
-  // textlayer elements
+  // create time textlayer
+  s_time_layer = text_layer_create(GRect(0, 0, bounds.size.w, 50));
   text_layer_set_background_color(s_time_layer, GColorClear);
   text_layer_set_font(s_time_layer, s_time_font);
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
 
-  // add textlayer to Window layer
   layer_add_child(window_layer, text_layer_get_layer(s_time_layer));
+
+  // create battery layer
+  s_battery_layer = text_layer_create(GRect(0, 50, bounds.size.w, 50));
+  text_layer_set_background_color(s_battery_layer, GColorClear);
+  text_layer_set_font(s_battery_layer, fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21));
+
+  layer_add_child(window_layer, text_layer_get_layer(s_battery_layer));
 }
 
 static void main_window_unload(Window* window) {
@@ -61,6 +74,7 @@ static void main_window_unload(Window* window) {
   fonts_unload_custom_font(s_time_font);
   bitmap_layer_destroy(s_kitty_layer);
   gbitmap_destroy(s_kitty_bitmap);
+  text_layer_destroy(s_battery_layer);
 }
 
 static void init() {
@@ -81,6 +95,12 @@ static void init() {
 
   // time is displayed correctly at init
   update_time();
+
+  // register battery service
+  battery_state_service_subscribe(battery_callback);
+
+  // Ensure battery level is displayed from the start
+  battery_callback(battery_state_service_peek());
 }
 
 static void deinit() {

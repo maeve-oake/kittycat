@@ -18,6 +18,7 @@
     flake-utils.lib.eachDefaultSystem (system: {
       apps.default = mkAppInstallPbw.${system} {
         pbwPackage = self.packages.${system}.default;
+        withLogs = false;
       };
 
       packages.default = buildPebbleApp.${system} {

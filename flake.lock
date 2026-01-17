@@ -39,11 +39,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1768597727,
-        "narHash": "sha256-+bx6LAfr6oJQPkNp7g2fHKbSxzCtQ5XsRLeE2BFz9kI=",
+        "lastModified": 1768665336,
+        "narHash": "sha256-hNsgZOOXwvyiJARYKZI+rNoXR5gupN9+kWYFCQSyz0o=",
         "owner": "anna-oake",
         "repo": "pebble.nix",
-        "rev": "4b58d86412312963eee0b863641191156279e7c9",
+        "rev": "809d86622edbe54022978380d08ddf5e4c753f17",
         "type": "github"
       },
       "original": {
